@@ -73,6 +73,7 @@ public class ProductController {
         productService.deleteProduct(id);
     }
 
+    // Método para verificar se há um desconto a ser aplicado
     private void verifyDiscount(Product product) {
         LocalDate currentDate = LocalDate.now();
         if (currentDate.getMonthValue() == 11 && currentDate.getDayOfMonth() == 24) {
