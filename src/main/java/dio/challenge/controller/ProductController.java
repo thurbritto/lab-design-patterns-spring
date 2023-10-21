@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -39,8 +40,12 @@ public class ProductController {
     @PostMapping
     public Product createProduct(@RequestBody Product product) {
         System.out.println("POST - Inserindo o produto");
+
+        verifyDiscount(product);
+
         return productService.createProduct(product);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
@@ -53,22 +58,7 @@ public class ProductController {
             product.setName(updatedProduct.getName());
             product.setPrice(updatedProduct.getPrice());
 
-            // Variáveis para identificar a data
-            LocalDate currentDate = LocalDate.now();
-            LocalDate blackFridayDate = LocalDate.of(currentDate.getYear(), 11, 24);
-
-
-            // Verifica se é black friday, se for, o desconto de 50% é aplicado
-            // Se não for, é aplicado o desconto de 10%
-            if (currentDate.equals(blackFridayDate)) {
-                double originalPrice = product.getPrice();
-                double discountedPrice = blackFridayDiscountStrategy.applyDiscount(originalPrice);
-                product.setPrice(originalPrice - discountedPrice);
-            } else {
-                double originalPrice = product.getPrice();
-                double discountedPrice = marketDiscountStrategy.applyDiscount(originalPrice);
-                product.setPrice(originalPrice - discountedPrice);
-            }
+            verifyDiscount(product);
 
             productService.updateProduct(product);
             return ResponseEntity.ok(product);
@@ -78,8 +68,24 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Long id) {
+    public void deleteProduct (@PathVariable Long id){
         System.out.println("DELETE - Deletando o produto");
         productService.deleteProduct(id);
+    }
+
+    private void verifyDiscount(Product product) {
+        LocalDate currentDate = LocalDate.now();
+        if (currentDate.getMonthValue() == 11 && currentDate.getDayOfMonth() == 24) {
+            // É 24 de novembro, aplique o desconto de Black Friday
+            double originalPrice = product.getPrice();
+            double discountedPrice = blackFridayDiscountStrategy.applyDiscount(originalPrice);
+            product.setPrice(originalPrice - discountedPrice);
+        }
+        if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
+            // É sábado, aplique o desconto de feira
+            double originalPrice = product.getPrice();
+            double discountedPrice = marketDiscountStrategy.applyDiscount(originalPrice);
+            product.setPrice(originalPrice - discountedPrice);
+        }
     }
 }
