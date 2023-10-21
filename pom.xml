@@ -44,8 +44,9 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>${openapi.version}</version>
+			<version>1.7.0</version>
 		</dependency>
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
