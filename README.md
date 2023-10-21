@@ -24,12 +24,12 @@ A estratégia selecionada é usada para calcular o preço com desconto e atualiz
 
 ## Exemplo de Uso
 
-- Você precisará fazer uma das seguintes requisições HTTP:
+### Você precisará fazer uma das seguintes requisições HTTP:
 - Crie um novo produto através da rota `POST /products`.
 - Ou atualize o produto usando a rota `PUT /products/{id}`.
 - O desconto será aplicado automaticamente dependendo da data.
 
-- Caso queira explorar mais, também tem as requisições padrões:
+### Caso queira explorar mais, também tem as requisições padrões:
 - Pesquise todos produtos no banco de dados através da rota `GET /products`
 - Ou pesquise um produto específico através da rota `GET /products/{id}`
 - Delete um produto específico pela rota `DELETE /products/{id}`
